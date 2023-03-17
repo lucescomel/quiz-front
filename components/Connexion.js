@@ -8,9 +8,10 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainer } from "@react-navigation/native";
 
-export default function ConnexionScreen() {
+export default function ConnexionScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,14 +24,14 @@ export default function ConnexionScreen() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ username : email, password, }),
+          body: JSON.stringify({ username: email, password }),
         }
       );
 
-      const json = await response.json();
-      // console.log("test : ", json);
-
-
+      const data = await response.json();
+      // console.log("test : ", data.token);
+      AsyncStorage.setItem("token_key", data.token);
+      navigation.navigate("Home");
     } catch (error) {
       console.error(error);
       Alert.alert("Erreur lors de la connexion");
