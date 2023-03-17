@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Alert, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  Alert,
+  Pressable,
+  AsyncStorage,
+} from "react-native";
 
 export default function ConnexionScreen() {
   const [email, setEmail] = useState("");
@@ -14,17 +23,14 @@ export default function ConnexionScreen() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ username : email, password, }),
         }
       );
 
-      if (response.status === 200) {
-        const data = await response.json();
-        // Code à exécuter si l'authentification est réussie (par exemple, stocker les informations de l'utilisateur dans le state global)
-        Alert.alert("Connexion réussie !");
-      } else {
-        Alert.alert("Erreur lors de la connexion");
-      }
+      const json = await response.json();
+      // console.log("test : ", json);
+
+
     } catch (error) {
       console.error(error);
       Alert.alert("Erreur lors de la connexion");
@@ -51,12 +57,9 @@ export default function ConnexionScreen() {
         placeholderTextColor={"black"}
         secureTextEntry={true}
       />
-      <Pressable
-        style={styles.button}
-        onPress={handleLogin}>
-      <Text>Se connecter</Text>
+      <Pressable style={styles.button} onPress={handleLogin}>
+        <Text>Se connecter</Text>
       </Pressable>
-
     </View>
   );
 }
@@ -77,17 +80,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "#F79B7E",
     borderRadius: 40,
-    borderColor:"#B5715C",
-    paddingVertical: 10
+    borderColor: "#B5715C",
+    paddingVertical: 10,
   },
   button: {
     marginVertical: 10,
-    backgroundColor:"#FA9C7F",
-    borderWidth:1,
-    borderColor:"#B5715C",
+    backgroundColor: "#FA9C7F",
+    borderWidth: 1,
+    borderColor: "#B5715C",
     width: "30%",
-    alignItems:"center",
-    justifyContent:"center",
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 40,
@@ -95,9 +98,9 @@ const styles = StyleSheet.create({
 
   text: {
     fontWeight: "bold",
-    color:"white",
+    color: "white",
     fontSize: 35,
     opacity: 0.5,
-    paddingVertical: 10
-  }
+    paddingVertical: 10,
+  },
 });
