@@ -27,11 +27,14 @@ export default function ConnexionScreen({ navigation }) {
           body: JSON.stringify({ username: email, password }),
         }
       );
-
-      const data = await response.json();
-      // console.log("test : ", data.token);
-      AsyncStorage.setItem("token_key", data.token);
-      navigation.navigate("Home");
+      if (response.status === 200) {
+        const data = await response.json();
+        // console.log("test : ", data.token);
+        AsyncStorage.setItem("token_key", data.token);
+        navigation.navigate("Home");
+      } else {
+        Alert.alert("email ou mot de passe incorrect");
+      }
     } catch (error) {
       console.error(error);
       Alert.alert("Erreur lors de la connexion");

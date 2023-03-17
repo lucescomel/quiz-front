@@ -2,13 +2,23 @@ import * as React from "react";
 import { StyleSheet, Button, View, Text, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import connectToken from "../utils/connectToken";
 
 export default function HomeScreen({ navigation }) {
+  const getData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token_key");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+    } catch (error) {}
+  };
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Home Screen</Text>
       <Button
-        // title="Go to connexion"
+        title="Go to connexion"
         onPress={() => navigation.navigate("Connexion")}
       />
     </View>
