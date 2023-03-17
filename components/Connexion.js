@@ -7,8 +7,8 @@ import {
   Button,
   Alert,
   Pressable,
-  AsyncStorage,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ConnexionScreen() {
   const [email, setEmail] = useState("");
