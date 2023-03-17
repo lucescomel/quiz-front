@@ -9,6 +9,6 @@ export  const connectToken = async () => {
       }
       
     } catch (error) {
-      
+      console.error
     }
   }
