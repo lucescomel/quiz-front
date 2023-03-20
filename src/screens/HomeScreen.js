@@ -1,17 +1,18 @@
 import * as React from "react";
-import { StyleSheet, Button, View, Text, Image } from "react-native";
+import { StyleSheet, Button, View, Text, Image, Pressable } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { connectToken } from "../utils/connectToken";
 import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { UserConnected } from "../components/UserConnected";
+import NewQuiz from '../screens/NewQuiz';
 
 export default function HomeScreen({ navigation }) {
   // console.log("config", config);
   const [resultat, setResultat] = useState([]);
   const [user, setUser] = useState("");
-
+  const [noteGlobal, setNoteGlobale] = useState(null);
   useEffect(() => {
     (async () => {
       const config = await connectToken();
@@ -25,23 +26,31 @@ export default function HomeScreen({ navigation }) {
         // console.log("tata", userConnected);
       });
 
-      // todo : a modifier pour que la liste de l'historic soit en fonction de l'user connect
       const response = fetch(
         "https://quiz-luc.projets.lecoledunumerique.fr/apip/historics_users",
         config
       )
         .then(async function (response) {
-          console.log("tutuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+          // console.log("tutuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
           const res = await response.json();
           setResultat(res);
-          //
+
+          if (res && res.length > 0) {
+            let score = res.reduce((a, b) => a + b.note, 0);
+
+            setNoteGlobale((score / res.length).toFixed(2));
+          }
         })
         .catch(function (error) {
           console.log("mauvais", error);
         });
     })();
   }, []);
-  console.log("test", resultat);
+
+  const handleNewQuiz = () => {
+    navigation.navigate("NewQuiz")
+  }
+  // console.log("test", resultat);
   // console.log("toto", user);
   // const noteGlobal = resultat.map((item)=> {key={{item.id}}})
 
@@ -52,11 +61,22 @@ export default function HomeScreen({ navigation }) {
           <Text>Bonjour </Text>
           <Text style={{ textTransform: "capitalize" }}>{user.name}</Text>
         </Text>
+          <Pressable style={styles.button} onPress={handleNewQuiz}>
+            <Text>Créer un nouveau quiz</Text>
+          </Pressable>
       </View>
-      <View style={{ flex: 1, borderColor: "blue", borderWidth: 2 }}>
+      <View style={{flex: 1}}>
         <Text>Note Globale : </Text>
+        <Text>{noteGlobal || "Pas d'historique"}</Text>
       </View>
-      <View style={{ flex: 8, borderColor: "red", borderWidth: 2 }}>
+      <View
+        style={{
+          flex: 4,
+          borderColor: "red",
+          borderWidth: 2,
+          paddingHorizontal: 60,
+        }}
+      >
         <Text>Votre Historique :</Text>
         {resultat &&
           resultat.map((item) => {
@@ -70,6 +90,8 @@ export default function HomeScreen({ navigation }) {
             );
           })}
       </View>
+
+
       <StatusBar style="auto" />
     </View>
   );
@@ -78,8 +100,9 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#E0AF7E",
   },
   background: {
     position: "absolute",
@@ -96,5 +119,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#1E1736",
     fontSize: 16,
+  },
+  text: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 35,
+    opacity: 0.5,
+    paddingVertical: 10,
   },
 });

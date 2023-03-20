@@ -4,6 +4,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ConnexionScreen from "./src/screens/Connexion";
+import NewQuiz from './src/screens/NewQuiz';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,11 @@ export default function App() {
         <Stack.Screen
           name="Connexion"
           component={ConnexionScreen}
+          options={{ headerShown: false }}
+        />
+      <Stack.Screen
+          name="NewQuiz"
+          component={NewQuiz}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
