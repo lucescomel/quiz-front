@@ -4,66 +4,73 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { connectToken } from "../utils/connectToken";
 import { useState, useEffect } from "react";
+import { StatusBar } from "expo-status-bar";
+import { UserConnected } from "../components/UserConnected";
 
 export default function HomeScreen({ navigation }) {
   // console.log("config", config);
-  const [Resultat, setResultat] = useState("");
+  const [resultat, setResultat] = useState([]);
+  const [user, setUser] = useState("");
 
   useEffect(() => {
     (async () => {
       const config = await connectToken();
+      const responseUser = fetch(
+        "https://quiz-luc.projets.lecoledunumerique.fr/apip/user_connect",
+        config
+      ).then(async function (responseUser) {
+        const userConnected = await responseUser.json();
+        // console.log("coucou", userConnected);
+        setUser(userConnected);
+        // console.log("tata", userConnected);
+      });
 
+      // todo : a modifier pour que la liste de l'historic soit en fonction de l'user connect
       const response = fetch(
-        "https://brief12-api-quiz.projets.lecoledunumerique.fr/apip/historics",
+        "https://quiz-luc.projets.lecoledunumerique.fr/apip/historics_users",
         config
       )
         .then(async function (response) {
-          // console.log("rep :", await response.json());
+          console.log("tutuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
           const res = await response.json();
           setResultat(res);
+          //
         })
         .catch(function (error) {
-          console.log("t nul");
+          console.log("mauvais", error);
         });
     })();
   }, []);
-
-  // useEffect(() => {
-  //   // console.log("toto");
-
-  //   getHistorics;
-  //   const getHistorics = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         "https://quiz-luc.projets.lecoledunumerique.fr/apip/historics",
-  //         {
-  //           config,
-  //         }
-  //         );
-  //         console.log("rep", response);
-  //         const data = await response.json();
-  //         console.log("data", data);
-
-  //         if (response.status === 200) {
-  //           // console.log("test : ", data);
-  //         } else {
-  //           Alert.alert("Erreur lors de la récupération de l'historique");
-  //         }
-  //       } catch (error) {
-  //         console.error(error);
-  //         Alert.alert("Erreur lors de la récupération de l'historique");
-  //       }
-  //     };
-  //     getHistorics();
-  //   }, []);
+  console.log("test", resultat);
+  // console.log("toto", user);
+  // const noteGlobal = resultat.map((item)=> {key={{item.id}}})
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to connexion"
-        onPress={() => navigation.navigate("Connexion")}
-      />
+    <View style={styles.container}>
+      <View style={{ flex: 1, alignItems: "flex-start", paddingVertical: 80 }}>
+        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+          <Text>Bonjour </Text>
+          <Text style={{ textTransform: "capitalize" }}>{user.name}</Text>
+        </Text>
+      </View>
+      <View style={{ flex: 1, borderColor: "blue", borderWidth: 2 }}>
+        <Text>Note Globale : </Text>
+      </View>
+      <View style={{ flex: 8, borderColor: "red", borderWidth: 2 }}>
+        <Text>Votre Historique :</Text>
+        {resultat &&
+          resultat.map((item) => {
+            return (
+              <UserConnected
+                key={item.id}
+                note={item.note}
+                id={item.id}
+                date={item.history_date}
+              />
+            );
+          })}
+      </View>
+      <StatusBar style="auto" />
     </View>
   );
 }
