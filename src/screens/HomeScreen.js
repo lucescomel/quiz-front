@@ -32,10 +32,10 @@ export default function HomeScreen({ navigation }) {
           const res = await response.json();
           setResultat(res);
 
-          if (res && res.length > 0) {
-            let score = res.reduce((a, b) => a + b.note, 0);
-            setNoteGlobale((score / res.length).toFixed(2));
-          }
+          // if (res && res.length > 0) {
+          //   let score = res.reduce((a, b) => a + b.note, 0);
+          //   setNoteGlobale((score / res.length).toFixed(2));
+          // }
         })
         .catch(function (error) {
           console.log("mauvais", error);
@@ -60,7 +60,7 @@ export default function HomeScreen({ navigation }) {
 
       <View style={styles.noteContainer}>
         <Text style={styles.noteLabel}>Note globale :</Text>
-        <Text style={styles.noteValue}>{noteGlobal || "Pas d'historique"}</Text>
+        {/* <Text style={styles.noteValue}>{noteGlobal || "Pas d'historique"}</Text> */}
       </View>
 
       <View style={styles.historiqueContainer}>
@@ -69,9 +69,10 @@ export default function HomeScreen({ navigation }) {
           resultat.map((item) => (
             <UserConnected
               key={item.id}
-              note={item.note}
-              id={item.id}
-              date={item.history_date}
+              // note={item.note}
+              // id={item.id}
+              date={item.historic.history_date}
+              category={item.categories[2]}
             />
           ))}
       </View>
