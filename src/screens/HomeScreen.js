@@ -1,11 +1,8 @@
 import { StyleSheet, Button, View, Text, Image, Pressable } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { connectToken } from "../utils/connectToken";
 import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { UserConnected } from "../components/UserConnected";
-import NewQuiz from "../screens/NewQuiz";
 import moment from "moment";
 import { getMoyenne } from "../utils/default";
 
