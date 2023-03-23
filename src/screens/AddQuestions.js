@@ -13,6 +13,12 @@ export default function AddQuestions({ navigation }) {
   const [questionName, setQuestionName] = useState("");
   const [questionDescription, setQuestionDescription] = useState("");
 
+
+  const handleCreateQuestion = () => {
+
+  };
+
+
   const handleHome = () => {
     navigation.navigate("Home");
   };

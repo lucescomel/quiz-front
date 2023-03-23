@@ -1,81 +1,89 @@
-import React, { useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  TextInput,
-  Button,
-} from "react-native";
+import { Text, View, Pressable, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect, useState } from "react";
+import { connectToken } from "../utils/connectToken";
+import { CardCategories } from "../components/CardCategorie";
 
-export default function NewQuiz({ navigation }) {
-  const [quizName, setQuizName] = useState("");
-  const [quizDescription, setQuizDescription] = useState("");
+export default function NewQuizzScreen({ navigation }) {
+  const [user, setUser] = useState("");
+  const [resultat, setResultat] = useState([]);
 
-  const handleHome = () => {
+  const handleGoBack = () => {
     navigation.navigate("Home");
   };
+  useEffect(() => {
+    (async () => {
+      const config = await connectToken();
+      const responseUser = fetch(
+        "https://quiz-luc.projets.lecoledunumerique.fr/apip/user_connect",
+        config
+      ).then(async function (responseUser) {
+        const userConnected = await responseUser.json();
+        setUser(userConnected);
+      });
+      const response = fetch(
+        "https://quiz-luc.projets.lecoledunumerique.fr/apip/categories",
+        config
+      )
+        .then(async function (response) {
+          const res = await response.json();
+          console.log("resultat Categories :", res["hydra:member"]);
+          setResultat(res["hydra:member"]);
+        })
+        .catch(function (error) {
+          console.log("mauvais", error);
+        });
+    })();
+  }, []);
+  // useState ICI object.hydra:member ==> object["hydra:member"].map((itm) => itm.idUser)
 
-  const handleCreateQuiz = () => {
-    // Code pour envoyer les données du formulaire vers l'API et créer le quiz
-    console.log(`Nom : ${quizName} / Description : ${quizDescription}`);
+  const handleCreateQuizClick = (idCat) => {
+    // affichage d'une nouvelle page avec les questions de la categorie choisit
+    console.log("ID Categorie", idCat);
+    navigation.navigate("Questions", { idCat });
   };
-
   return (
-    <SafeAreaView style={styles.view}>
-      <Button onPress={handleHome} title="Retour" />
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>Créer un quiz</Text>
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder="Nom du quiz"
-            onChangeText={setQuizName}
-            value={quizName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Description du quiz"
-            onChangeText={setQuizDescription}
-            value={quizDescription}
-          />
-          <Button
-            style={styles.button}
-            title="Créer"
-            onPress={handleCreateQuiz}
-          />
+        <Pressable onPress={handleGoBack}>
+          <Text>Back</Text>
+        </Pressable>
+        <Text style={styles.text}>Faites un nouveau Quiz</Text>
+        <Text>Choisissez une catÃ©gorie :</Text>
+        <View>
+          {resultat &&
+            resultat.map((item) => {
+              return (
+                <CardCategories
+                  key={item.id}
+                  name={item.name}
+                  createQuizClick={() => handleCreateQuizClick(item.id)}
+                />
+              );
+            })}
         </View>
       </View>
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
-  view: {
+  safeArea: {
     flex: 1,
-    backgroundColor: "#E0AF7E",
+    backgroundColor: "#9985E0",
   },
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#E0AF7E",
-    paddingHorizontal: 20,
+    paddingVertical: 30,
+    paddingHorizontal: 30,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  input: {
-    height: 40,
-    width: "100%",
-    borderColor: "gray",
+  button: {
+    borderRadius: 50,
+    borderColor: "#fff",
     borderWidth: 1,
-    borderRadius: 5,
-    backgroundColor:"#FFFFFF",
-    paddingHorizontal: 10,
-    marginBottom: 20,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    backgroundColor: "#d380ed",
+    marginBottom: 50,
   },
 });

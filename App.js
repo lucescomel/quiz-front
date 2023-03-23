@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ConnexionScreen from "./src/screens/Connexion";
 import NewQuiz from './src/screens/NewQuiz';
 import AddQuestions from "./src/screens/AddQuestions";
+import QuestionScreen from "./src/screens/Questions";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,11 @@ export default function App() {
          <Stack.Screen
           name="AddQuestions"
           component={AddQuestions}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Questions"
+          component={QuestionScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

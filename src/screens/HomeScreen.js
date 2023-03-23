@@ -73,7 +73,8 @@ export default function HomeScreen({ navigation }) {
         {resultat &&
           resultat.map((item) => {
             return (
-              <View>
+              <View 
+                key={item.historic.id}>
                 <Text>
                   Catégorie :{" "}
                   {Object.values(item.categories).length == 1
@@ -81,7 +82,7 @@ export default function HomeScreen({ navigation }) {
                     : "Générale"}
                 </Text>
                 <UserConnected
-                  key={Object.keys(item.categories)}
+                 
                   note={item.historic.note}
                   date={moment(item.historic.history_date).format(
                     "DD/MM/YY - HH:mm"
