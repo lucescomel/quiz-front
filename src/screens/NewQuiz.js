@@ -1,4 +1,4 @@
-import { Text, View, Pressable, StyleSheet } from "react-native";
+import { Text, View, Pressable, StyleSheet, Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,7 +10,7 @@ export default function NewQuizzScreen({ navigation }) {
   const [user, setUser] = useState("");
   const [resultat, setResultat] = useState([]);
 
-  const handleGoBack = () => {
+  const handleHome = () => {
     navigation.navigate("Home");
   };
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function NewQuizzScreen({ navigation }) {
       )
         .then(async function (response) {
           const res = await response.json();
-          console.log("resultat Categories :", res["hydra:member"]);
+          // console.log("resultat Categories :", res["hydra:member"]);
           setResultat(res["hydra:member"]);
         })
         .catch(function (error) {
@@ -41,18 +41,18 @@ export default function NewQuizzScreen({ navigation }) {
 
   const handleCreateQuizClick = (idCat) => {
     // affichage d'une nouvelle page avec les questions de la categorie choisit
-    console.log("ID Categorie", idCat);
+    // console.log("ID Categorie", idCat);
     navigation.navigate("Questions", { idCat });
   };
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Pressable onPress={handleGoBack}>
-          <Text>Back</Text>
-        </Pressable>
-        <Text style={styles.text}>Faites un nouveau Quiz</Text>
-        <Text>Choisissez une catÃ©gorie :</Text>
-        <View>
+        <View style={styles.header}>
+          <Button onPress={handleHome} title="< Retour" />
+          <Text style={styles.title}>Faites un nouveau Quiz</Text>
+        </View>
+        <Text style={styles.subtitle}>Choisissez une catégorie :</Text>
+        <View style={styles.categories}>
           {resultat &&
             resultat.map((item) => {
               return (
@@ -71,19 +71,31 @@ export default function NewQuizzScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#9985E0",
+    backgroundColor: "#E0AF7E",
   },
   container: {
-    paddingVertical: 30,
-    paddingHorizontal: 30,
-  },
-  button: {
-    borderRadius: 50,
-    borderColor: "#fff",
-    borderWidth: 1,
+    flex: 1,
     paddingHorizontal: 24,
-    paddingVertical: 12,
-    backgroundColor: "#d380ed",
-    marginBottom: 50,
+    paddingTop: 30,
   },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  title: {
+    flex: 1,
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  categories: {
+    flex: 1,
+  },
+
 });
