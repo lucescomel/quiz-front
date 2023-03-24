@@ -63,7 +63,7 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.userInfoName}>{user?.name || "Utilisateur"}</Text>
         </Text>
         <Pressable style={styles.button} onPress={handleNewQuiz}>
-          <Text style={styles.buttonText}>Créer un nouveau quiz</Text>
+          <Text style={styles.buttonText}>Nouveau quiz</Text>
         </Pressable>
       </View>
       <View style={styles.addQuestionContainer}>

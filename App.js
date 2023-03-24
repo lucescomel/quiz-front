@@ -7,6 +7,7 @@ import ConnexionScreen from "./src/screens/Connexion";
 import NewQuiz from './src/screens/NewQuiz';
 import AddQuestions from "./src/screens/AddQuestions";
 import QuestionScreen from "./src/screens/Questions";
+import Resultat from "./src/screens/Resultat";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,11 @@ export default function App() {
         <Stack.Screen
           name="Questions"
           component={QuestionScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Resultat"
+          component={Resultat}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

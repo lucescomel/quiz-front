@@ -18,8 +18,14 @@ import { StatusBar } from "expo-status-bar";
 export default function QuestionScreen({ navigation, route }) {
   // const [resultat, setResultat] = useState([]);
   const [user, setUser] = useState("");
-  const { questions, setQuestions, setCurrentQuestion, currentQuestion } =
-    useQuestionsStore();
+  const {
+    questions,
+    setQuestions,
+    setCurrentQuestion,
+    currentQuestion,
+    increasePoints,
+    point,
+  } = useQuestionsStore();
   const { reponses, setReponses, currentReponse } = useReponsesStore();
   const {
     historiques,
@@ -42,7 +48,7 @@ export default function QuestionScreen({ navigation, route }) {
         .then(async function (response) {
           const res = await response.json();
           // console.log("toto");
-          console.log("res cat", JSON.stringify(res, null, 2));
+          // console.log("res cat", JSON.stringify(res, null, 2));
           setQuestions(res);
           setCurrentQuestion(res[0]);
 
@@ -59,9 +65,28 @@ export default function QuestionScreen({ navigation, route }) {
     navigation.navigate("Home");
   };
 
-  const handleClick = () => {
-
-  }
+  const handleClick = (idReponse) => {
+    if (currentQuestion.id_success.id === idReponse) {
+      console.log("juste");
+      increasePoints();
+    } else {
+      console.log("faux");
+    }
+  
+    // Chercher l'index de la question actuelle dans le tableau questions
+    const currentIndex = questions.findIndex((q) => q.id === currentQuestion.id);
+  
+    // Si l'index n'est pas le dernier élément du tableau
+    if (currentIndex !== questions.length - 1) {
+      // Mettre à jour l'état currentQuestion avec la question suivante
+      setCurrentQuestion(questions[currentIndex + 1]);
+    } else {
+      // Si c'est la dernière question, naviguer vers la page des résultats
+      navigation.navigate("Resultat");
+    }
+  };
+  console.log("point :", point);
+  // console.log("index :", currentQuestion);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -77,14 +102,17 @@ export default function QuestionScreen({ navigation, route }) {
               currentQuestion.answers &&
               currentQuestion.answers.map((newItem) => {
                 return (
-                  <Pressable key={newItem.id} onPress={handleClick(newItem)}>
-                    <CheckBox
+                  <Pressable
+                    key={newItem.id}
+                    onPress={() => handleClick(newItem.id)}
+                  >
+                    {/* <CheckBox
                       checkedIcon="dot-circle-o"
                       uncheckedIcon="circle-o"
                       checkedColor="#E0AF7E"
                       checked={false}
                       containerStyle={styles.answerContainer}
-                    />
+                    /> */}
                     <Text style={styles.answers}>{newItem.title}</Text>
                   </Pressable>
                 );
@@ -124,6 +152,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  answers: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    padding: 20,
+    borderColor: "#E0AF7E",
+    borderWidth: 1,
+    borderRadius: 5,
   },
   // answerContainer: {
   //   backgroundColor: "transparent",
