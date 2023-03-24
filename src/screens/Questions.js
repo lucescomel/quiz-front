@@ -3,15 +3,15 @@ import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Icon, CheckBox } from "react-native-elements";
 import { connectToken } from "../utils/connectToken";
-
+ 
 export default function QuestionScreen({ navigation, route }) {
   const [resultat, setResultat] = useState([]);
   const [user, setUser] = useState("");
-
+ 
   useEffect(() => {
     (async () => {
       const config = await connectToken();
-
+ 
       const categoryId = route.params.idCat;
       // console.log("Page QUESTION CATEGORIE : ", categoryId);
       const response = fetch(
@@ -21,7 +21,7 @@ export default function QuestionScreen({ navigation, route }) {
         .then(async function (response) {
           const res = await response.json();
           console.log("res cat", res);
-
+ 
           res.map((item) => {
             const reponse = item.answers;
             console.log("item.answers: ", reponse);
@@ -29,7 +29,7 @@ export default function QuestionScreen({ navigation, route }) {
               console.log(newItem);
             });            
           });
-        
+       
           // console.log('resultat', res);
           setResultat(res);
         })
@@ -38,11 +38,11 @@ export default function QuestionScreen({ navigation, route }) {
         });
     })();
   }, []);
-
+ 
   const handleHome = () => {
     navigation.navigate("Home");
   };
-
+ 
   return (
     <ScrollView>
       <SafeAreaView style={styles.safeArea}>
@@ -78,14 +78,14 @@ export default function QuestionScreen({ navigation, route }) {
                   </View>
                 );
               })}
-
+ 
           </View>
         </View>
       </SafeAreaView>
     </ScrollView>
   );
 }
-
+ 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,

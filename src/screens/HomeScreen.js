@@ -13,18 +13,17 @@ import {
 import moment from "moment";
 import { connectToken } from "../utils/connectToken";
 import { getMoyenne } from "../utils/default";
-
+ 
 
 export default function HomeScreen({ navigation }) {
   const [resultat, setResultat] = useState([]);
   const [user, setUser] = useState("");
   // const [noteGlobale, setNoteGlobale] = useState(null);
-  // const [noteGlobale, setNoteGlobale] = useState(null);
-
+ 
   useEffect(() => {
     (async () => {
       const config = await connectToken();
-
+ 
       const responseUser = fetch(
         "https://quiz-luc.projets.lecoledunumerique.fr/apip/user_connect",
         config
@@ -32,7 +31,7 @@ export default function HomeScreen({ navigation }) {
         const userConnected = await responseUser.json();
         setUser(userConnected);
       });
-
+ 
       const response = fetch(
         "https://quiz-luc.projets.lecoledunumerique.fr/apip/historics_users",
         config
@@ -46,15 +45,15 @@ export default function HomeScreen({ navigation }) {
         });
     })();
   }, []);
-
+ 
   const handleNewQuiz = () => {
     navigation.navigate("NewQuiz");
   };
-
+ 
   const handleAddQuestion = () => {
     navigation.navigate("AddQuestions");
   };
-
+ 
   const noteGlobale = getMoyenne(resultat);
   return (
     <SafeAreaView style={styles.container}>
@@ -67,10 +66,7 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.buttonText}>Créer un nouveau quiz</Text>
         </Pressable>
       </View>
-      <Pressable style={styles.button} onPress={handleAddQuestion}>
-        <Text style={styles.buttonText}>Ajouter une nouvelle question</Text>
-      </Pressable>
-
+ 
       <ScrollView style={styles.scrollView}>
         <View style={styles.noteContainer}>
           <Text style={styles.noteLabel}>Note globale :</Text>
@@ -78,7 +74,7 @@ export default function HomeScreen({ navigation }) {
             {noteGlobale || "Pas d'historique"}
           </Text>
         </View>
-
+ 
         <View style={styles.historiqueContainer}>
           <Text style={styles.historiqueLabel}>Votre historique :</Text>
           {resultat.map((item) => (
@@ -98,24 +94,24 @@ export default function HomeScreen({ navigation }) {
               </View>
               <View style={styles.historiqueItemRight}>
                 <Text style={styles.historiqueItemNote}>{item.historic.note}</Text>
-
+ 
               </View>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-
+ 
       <View style={styles.addQuestionContainer}>
         <TouchableOpacity style={styles.addQuestionButton} onPress={handleAddQuestion}>
           <Text style={styles.addQuestionButtonText}>Ajouter une nouvelle question</Text>
         </TouchableOpacity>
       </View>
-
+ 
       <StatusBar style="auto" />
     </SafeAreaView>
   );
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -164,7 +160,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   historiqueContainer: {
-    flex: 4,
     flex: 4,
     width: "100%",
     backgroundColor: "#FFFFFF",
