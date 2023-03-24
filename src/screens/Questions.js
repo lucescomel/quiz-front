@@ -1,17 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Pressable,
+  Button,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Icon, CheckBox } from "react-native-elements";
+import { CheckBox } from "react-native-elements";
 import { connectToken } from "../utils/connectToken";
- 
+import { useQuestionsStore } from "../lib/store/questionsStore";
+import { useReponsesStore } from "../lib/store/reponsesStore";
+import { useHistoriquesStore } from "../lib/store/historiquesStore";
+import { StatusBar } from "expo-status-bar";
+
 export default function QuestionScreen({ navigation, route }) {
-  const [resultat, setResultat] = useState([]);
+  // const [resultat, setResultat] = useState([]);
   const [user, setUser] = useState("");
- 
+  const { questions, setQuestions, setCurrentQuestion, currentQuestion } =
+    useQuestionsStore();
+  const { reponses, setReponses, currentReponse } = useReponsesStore();
+  const {
+    historiques,
+    setHistoriques,
+    setCurrentHistorique,
+    currentHistorique,
+  } = useHistoriquesStore();
+
   useEffect(() => {
+    // console.log("début");
     (async () => {
       const config = await connectToken();
- 
+
       const categoryId = route.params.idCat;
       // console.log("Page QUESTION CATEGORIE : ", categoryId);
       const response = fetch(
@@ -20,72 +41,61 @@ export default function QuestionScreen({ navigation, route }) {
       )
         .then(async function (response) {
           const res = await response.json();
-          console.log("res cat", res);
- 
-          res.map((item) => {
-            const reponse = item.answers;
-            console.log("item.answers: ", reponse);
-            reponse.map((newItem) => {
-              console.log(newItem);
-            });            
-          });
-       
+          // console.log("toto");
+          console.log("res cat", JSON.stringify(res, null, 2));
+          setQuestions(res);
+          setCurrentQuestion(res[0]);
+
           // console.log('resultat', res);
-          setResultat(res);
+          // setResultat(res);
         })
         .catch(function (error) {
           console.log("mauvais", error);
         });
     })();
   }, []);
- 
+
   const handleHome = () => {
     navigation.navigate("Home");
   };
- 
+
+  const handleClick = () => {
+
+  }
+
   return (
-    <ScrollView>
-      <SafeAreaView style={styles.safeArea}>
-        <Button
-          onPress={handleHome}/>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView>
+        <Button onPress={handleHome} title="< Back" />
         <View style={styles.container}>
           <Text style={styles.title}>Question</Text>
           <View style={styles.questionContainer}>
-            <Text style={styles.questionTitle}>Titre de la question</Text>
-            {resultat &&
-              resultat.map((item, index) => {
+            <Text style={styles.questionTitle}>
+              {currentQuestion && currentQuestion.title}
+            </Text>
+            {currentQuestion &&
+              currentQuestion.answers &&
+              currentQuestion.answers.map((newItem) => {
                 return (
-                  <View key={item.id}>
-                    <Text style={styles.questionTitle}>
-                      {index + 1}. {item.title}
-                    </Text>
-                    {item.answers && item.answers.map((newItem) => {
-                      return (
-                        <Pressable>
-                          <CheckBox
-                            title={item.answer}
-                            checkedIcon="dot-circle-o"
-                            uncheckedIcon="circle-o"
-                            checkedColor="#E0AF7E"
-                            checked={false}
-                            onPress={() => console.log("checked")}
-                            containerStyle={styles.answerContainer}
-                          />
-                          <Text style={styles.answers}>{newItem.title}</Text>
-                        </Pressable>
-                      )
-                    })}
-                  </View>
+                  <Pressable key={newItem.id} onPress={handleClick(newItem)}>
+                    <CheckBox
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checkedColor="#E0AF7E"
+                      checked={false}
+                      containerStyle={styles.answerContainer}
+                    />
+                    <Text style={styles.answers}>{newItem.title}</Text>
+                  </Pressable>
                 );
               })}
- 
           </View>
         </View>
-      </SafeAreaView>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
- 
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
