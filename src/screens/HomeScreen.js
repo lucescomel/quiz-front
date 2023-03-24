@@ -63,8 +63,13 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.userInfoName}>{user?.name || "Utilisateur"}</Text>
         </Text>
         <Pressable style={styles.button} onPress={handleNewQuiz}>
-          <Text style={styles.buttonText}>Créer un nouveau quiz</Text>
+          <Text style={styles.buttonText}>Nouveau quiz</Text>
         </Pressable>
+      </View>
+      <View style={styles.addQuestionContainer}>
+        <TouchableOpacity style={styles.addQuestionButton} onPress={handleAddQuestion}>
+          <Text style={styles.buttonText}>Ajouter une nouvelle question</Text>
+        </TouchableOpacity>
       </View>
  
       <ScrollView style={styles.scrollView}>
@@ -101,11 +106,7 @@ export default function HomeScreen({ navigation }) {
         </View>
       </ScrollView>
  
-      <View style={styles.addQuestionContainer}>
-        <TouchableOpacity style={styles.addQuestionButton} onPress={handleAddQuestion}>
-          <Text style={styles.addQuestionButtonText}>Ajouter une nouvelle question</Text>
-        </TouchableOpacity>
-      </View>
+    
  
       <StatusBar style="auto" />
     </SafeAreaView>
@@ -142,6 +143,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#E0AF7E",
     fontWeight: "bold",
+  },
+
+  addQuestionButton: {
+    borderRadius: 20,
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 20,
   },
   noteContainer: {
     flex: 1,
