@@ -1,14 +1,24 @@
-import { StyleSheet, Button, View, Text, Image, Pressable } from "react-native";
-import { connectToken } from "../utils/connectToken";
-import { useState, useEffect } from "react";
-import { StatusBar } from "expo-status-bar";
-import { UserConnected } from "../components/UserConnected";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  StatusBar,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import moment from "moment";
+import { connectToken } from "../utils/connectToken";
 import { getMoyenne } from "../utils/default";
+
 
 export default function HomeScreen({ navigation }) {
   const [resultat, setResultat] = useState([]);
   const [user, setUser] = useState("");
+  // const [noteGlobale, setNoteGlobale] = useState(null);
   // const [noteGlobale, setNoteGlobale] = useState(null);
 
   useEffect(() => {
@@ -46,12 +56,12 @@ export default function HomeScreen({ navigation }) {
   };
 
   const noteGlobale = getMoyenne(resultat);
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.userInfo}>
         <Text style={styles.userInfoText}>
-          Bonjour <Text style={styles.userInfoName}>{user.name}</Text>
+          Bonjour{" "}
+          <Text style={styles.userInfoName}>{user?.name || "Utilisateur"}</Text>
         </Text>
         <Pressable style={styles.button} onPress={handleNewQuiz}>
           <Text style={styles.buttonText}>Créer un nouveau quiz</Text>
@@ -61,58 +71,67 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.buttonText}>Ajouter une nouvelle question</Text>
       </Pressable>
 
-      <View style={styles.noteContainer}>
-        <Text style={styles.noteLabel}>Note globale :</Text>
-        <Text style={styles.noteValue}>
-          {noteGlobale || "Pas d'historique"}
-        </Text>
-      </View>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.noteContainer}>
+          <Text style={styles.noteLabel}>Note globale :</Text>
+          <Text style={styles.noteValue}>
+            {noteGlobale || "Pas d'historique"}
+          </Text>
+        </View>
 
-      <View style={styles.historiqueContainer}>
-        <Text style={styles.historiqueLabel}>Votre historique :</Text>
-        {resultat &&
-          resultat.map((item) => {
-            return (
-              <View 
-                key={item.historic.id}>
-                <Text>
-                  Catégorie :{" "}
-                  {Object.values(item.categories).length == 1
+        <View style={styles.historiqueContainer}>
+          <Text style={styles.historiqueLabel}>Votre historique :</Text>
+          {resultat.map((item) => (
+            <TouchableOpacity
+              key={item.historic.id}
+              style={styles.historiqueItem}
+            >
+              <View style={styles.historiqueItemLeft}>
+                <Text style={styles.historiqueItemCategory}>
+                  {Object.values(item.categories).length === 1
                     ? Object.values(item.categories)[0]
                     : "Générale"}
                 </Text>
-                <UserConnected
-                 
-                  note={item.historic.note}
-                  date={moment(item.historic.history_date).format(
-                    "DD/MM/YY - HH:mm"
-                  )}
-                />
+                <Text style={styles.historiqueItemDate}>
+                  {moment(item.historic.history_date).format("DD/MM/YY - HH:mm")}
+                </Text>
               </View>
-            );
-          })}
+              <View style={styles.historiqueItemRight}>
+                <Text style={styles.historiqueItemNote}>{item.historic.note}</Text>
+
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+
+      <View style={styles.addQuestionContainer}>
+        <TouchableOpacity style={styles.addQuestionButton} onPress={handleAddQuestion}>
+          <Text style={styles.addQuestionButtonText}>Ajouter une nouvelle question</Text>
+        </TouchableOpacity>
       </View>
 
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "#E0AF7E",
   },
   userInfo: {
     flex: 1,
     alignItems: "flex-start",
-    paddingVertical: 80,
+    paddingTop: 80,
+    paddingHorizontal: 20,
   },
   userInfoText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
+    color: "#FFFFFF",
+    marginBottom: 10,
   },
   userInfoName: {
     textTransform: "capitalize",
@@ -136,13 +155,16 @@ const styles = StyleSheet.create({
   noteLabel: {
     fontSize: 20,
     fontWeight: "bold",
+    color: "#FFFFFF",
   },
   noteValue: {
     fontSize: 30,
     fontWeight: "bold",
     marginTop: 10,
+    color: "#FFFFFF",
   },
   historiqueContainer: {
+    flex: 4,
     flex: 4,
     width: "100%",
     backgroundColor: "#FFFFFF",
