@@ -42,7 +42,7 @@ export default function QuestionScreen({ navigation, route }) {
       const categoryId = route.params.idCat;
       // console.log("Page QUESTION CATEGORIE : ", categoryId);
       const response = fetch(
-        `https://quiz-luc.projets.lecoledunumerique.fr/apip/cat_questions/${categoryId}`,
+        `https://quiz-back-luc.projets.lecoledunumerique.fr/apip/cat_questions/${categoryId}`,
         config
       )
         .then(async function (response) {
@@ -72,10 +72,12 @@ export default function QuestionScreen({ navigation, route }) {
     } else {
       console.log("faux");
     }
-  
+
     // Chercher l'index de la question actuelle dans le tableau questions
-    const currentIndex = questions.findIndex((q) => q.id === currentQuestion.id);
-  
+    const currentIndex = questions.findIndex(
+      (q) => q.id === currentQuestion.id
+    );
+
     // Si l'index n'est pas le dernier élément du tableau
     if (currentIndex !== questions.length - 1) {
       // Mettre à jour l'état currentQuestion avec la question suivante

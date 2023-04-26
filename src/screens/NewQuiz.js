@@ -17,14 +17,14 @@ export default function NewQuizzScreen({ navigation }) {
     (async () => {
       const config = await connectToken();
       const responseUser = fetch(
-        "https://quiz-luc.projets.lecoledunumerique.fr/apip/user_connect",
+        "https://quiz-back-luc.projets.lecoledunumerique.fr/apip/user_connect",
         config
       ).then(async function (responseUser) {
         const userConnected = await responseUser.json();
         setUser(userConnected);
       });
       const response = fetch(
-        "https://quiz-luc.projets.lecoledunumerique.fr/apip/categories",
+        "https://quiz-back-luc.projets.lecoledunumerique.fr/apip/categories",
         config
       )
         .then(async function (response) {

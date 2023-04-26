@@ -18,7 +18,7 @@ export default function ConnexionScreen({ navigation }) {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-        "https://quiz-luc.projets.lecoledunumerique.fr/api/login_check",
+        "https://quiz-back-luc.projets.lecoledunumerique.fr/api/login_check",
         {
           method: "POST",
           headers: {

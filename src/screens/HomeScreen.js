@@ -25,7 +25,7 @@ export default function HomeScreen({ navigation }) {
       const config = await connectToken();
  
       const responseUser = fetch(
-        "https://quiz-luc.projets.lecoledunumerique.fr/apip/user_connect",
+        "https://quiz-back-luc.projets.lecoledunumerique.fr/apip/user_connect",
         config
       ).then(async function (responseUser) {
         const userConnected = await responseUser.json();
@@ -33,7 +33,7 @@ export default function HomeScreen({ navigation }) {
       });
  
       const response = fetch(
-        "https://quiz-luc.projets.lecoledunumerique.fr/apip/historics_users",
+        "https://quiz-back-luc.projets.lecoledunumerique.fr/apip/historics_users",
         config
       )
         .then(async function (response) {
